@@ -71,9 +71,9 @@ function Edit(): JSX.Element {
     const submitSuccess: boolean = await submitForm();
     setSubmitSuccess(submitSuccess);
     setLoading(false);
-    // setTimeout(() => {
-    //   history.push('/');
-    // }, 1500);
+    setTimeout(() => {
+      history.push('/');
+    }, 1500);
   }
   const submitForm = async (): Promise<boolean> => {
     try {

@@ -67,9 +67,9 @@ function Create(): JSX.Element {
     setSubmitSuccess(submitSuccess);
     setValues({...values, formData});
     setLoading(false);
-    // setTimeout(() => {
-    //   history.push('/');
-    // }, 1500);
+    setTimeout(() => {
+      history.push('/');
+    }, 1500);
   }
 
   const submitform = async (formData: {}) => {
