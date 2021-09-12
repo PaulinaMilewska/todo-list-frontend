@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
     
 function Task() {
-  let { taskId } = useParams();
+  let { taskId } = useParams<{ taskId: any }>();
   const [task, setTask] = useState<any>({});
     
   useEffect(() => {
@@ -23,14 +23,26 @@ function Task() {
               {task && 
                 <div className="main-post">
                   <div className="post-top-area">
-                    <h5 className="pre-title">Nest React Blog</h5>
+                    <h5 className="pre-title">YOUR TASK</h5>
                     <h3 className="title">
                       <span>
                         <b>{task.title}</b>
                       </span>
                     </h3>
                     <p className="para">
+                      {task.isDone ? "Yes" : "No"}
+                    </p>
+                    <p className="para">
+                      {task.priority}
+                    </p>
+                    <p className="para">
                       {task.description}
+                    </p>
+                    <p className="para">
+                      {task.startDate}
+                    </p>
+                    <p className="para">
+                      {task.endDate}
                     </p>
                   </div>
                 </div>              

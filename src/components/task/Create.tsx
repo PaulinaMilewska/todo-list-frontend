@@ -1,24 +1,18 @@
 import React, { useState } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { useAuth0 } from '../../contexts/auth0-context';
+import { useDoneTasks } from '../data/FetchData';
     
 function Create(): JSX.Element {
   let history = useHistory();
-  const { user, getIdTokenClaims } = useAuth0();
+  const doneTasks: any = useDoneTasks();
     
   interface IValues {
     [key: string]: any;
   }
-//   const [author, setAuthor] = useState<string>('');
   const [values, setValues] = useState<IValues>([]);
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-//   useEffect(() => {
-//     if (user) {
-//       setAuthor(user.name)
-//     }
-//   }, [user])
+  const [checkboxValue, setCheckboxValue] = useState<boolean>(false);
 
   const handleFormSubmission = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -30,28 +24,26 @@ function Create(): JSX.Element {
       priority: values.priority,
       startDate: values.startDate,
       endDate: values.endDate
-    //   author
     }
     const submitSuccess: boolean = await submitform(formData);
     setSubmitSuccess(submitSuccess);
     setValues({...values, formData});
     setLoading(false);
-    setTimeout(() => {
-      history.push('/');
-    }, 1500);
+    // setTimeout(() => {
+    //   history.push('/');
+    // }, 1500);
   }
 
   const submitform = async (formData: {}) => {
     try {
-      const accessToken = await getIdTokenClaims();
       const response = await fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/todo/task`, {
         method: "post",
         headers: new Headers({
           "Content-Type": "application/json",
-          "Accept": "application/json",
-          "authorization": `Bearer ${accessToken.__raw}`
+          "Accept": "application/json"
         }),
         body: JSON.stringify(formData)
+        
       });
       return response.ok;
     } catch (ex) {
@@ -65,6 +57,30 @@ function Create(): JSX.Element {
   const handleInputChanges = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     setFormValues({ [e.currentTarget.name]: e.currentTarget.value })
+  }
+  const handleCheckboxChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckboxValue(!checkboxValue);
+    setFormValues({ [e.currentTarget.name]: !checkboxValue });
+    // console.log("EVENT", e.currentTarget.name, !checkboxValue ? "true" : "false");
+
+    let actualDoneTasks = doneTasks;
+    const createdTask = {
+      _id: "not created yet",
+      title: values.title || "not created yet",
+      description: values.description || "not created yet",
+      priority: values.priority || "not created yet",
+      startDate: values.startDate || "not created yet",
+      endDate: values.endDate || "not created yet",
+    }
+      if(!checkboxValue === true) {
+        const data = {...values, ...createdTask};
+        actualDoneTasks = [...doneTasks, data];
+      }
+    
+    console.log(`--- DONE TASKS length: ${actualDoneTasks.length} ---`);
+    actualDoneTasks.map((task: any) => {
+      console.log(`Task id: ${task._id}, Title: ${task.title}, Description: ${task.description}, Priority: ${task.priority}, Start date: ${task.startDate}, End date: ${task.endDate}`)
+    })
   }
   return (
     <div>
@@ -80,7 +96,7 @@ function Create(): JSX.Element {
           The form was successfully submitted!
                         </div>
       )}
-      <form id={"create-post-form"} onSubmit={handleFormSubmission} noValidate={true}>
+      <form id={"create-todo-form"} onSubmit={handleFormSubmission} noValidate={true}>
         <div className="form-group col-md-12">
           <label htmlFor="title"> Title </label>
           <input type="text" id="title" onChange={(e) => handleInputChanges(e)} name="title" className="form-control" placeholder="Enter title" />
@@ -91,19 +107,22 @@ function Create(): JSX.Element {
         </div>
         <div className="form-group col-md-12">
           <label htmlFor="isDone"> Is done? </label>
-          <input type="checkbox" id="isDone" onChange={(e) => handleInputChanges(e)} name="isDone" className="form-control" />
+          <input type="checkbox" id="isDone"
+          onChange={(e) => handleCheckboxChanges(e)} 
+          checked={checkboxValue}
+          name="isDone" className="form-control" />
         </div>
         <div className="form-group col-md-12">
           <label htmlFor="priority"> Priority </label>
-          <input type="number" id="priority" onChange={(e) => handleInputChanges(e)} name="priority" className="form-control" placeholder="Enter priority" />
+          <input type="text" id="priority" onChange={(e) => handleInputChanges(e)} name="priority" className="form-control" placeholder="Enter priority" />
         </div>
         <div className="form-group col-md-12">
           <label htmlFor="startDate"> Start date </label>
-          <input type="date" id="startDate" onChange={(e) => handleInputChanges(e)} name="startDate" className="form-control" placeholder="Enter Start Date" />
+          <input type="text" id="startDate" onChange={(e) => handleInputChanges(e)} name="startDate" className="form-control" placeholder="Enter Start Date" />
         </div>
         <div className="form-group col-md-12">
           <label htmlFor="endDate"> End date </label>
-          <input type="date" id="endDate" onChange={(e) => handleInputChanges(e)} name="endDate" className="form-control" placeholder="Enter End Date" />
+          <input type="text" id="endDate" onChange={(e) => handleInputChanges(e)} name="endDate" className="form-control" placeholder="Enter End Date" />
         </div>
         <div className="form-group col-md-4 pull-right">
           <button className="btn btn-success" type="submit">
