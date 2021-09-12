@@ -1,20 +1,32 @@
 import React from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
 import { Link, withRouter } from 'react-router-dom';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+  }),
+);
+
 function Navbar() {
+    const classes = useStyles();
     return (
-        <header>
-            <div className="container-fluid position-relative no-side-padding">
-                <div className="menu-nav-icon" data-nav-menu="#main-menu">
-                    <i className="ion-navicon" />
-                </div>
-                <ul className="main-menu visible-on-click" id="main-menu">
-                    <li><Link className={"nav-link"} to={"/"}> Home </Link></li>
-                    {(
-                    <li><Link className={"nav-link"} to={"/create"}> Create </Link></li>
-                    )}
-                </ul>
-            </div>
-        </header>
+        <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <Button variant="contained" className={classes.menuButton}><Link className={"nav-link"} to={"/"}> Home </Link></Button>
+            <Button variant="contained"><Link className={"nav-link"} to={"/create"}> Create </Link></Button>
+          </Toolbar>
+        </AppBar>
+      </div>
     );
 }
 export default withRouter(Navbar);

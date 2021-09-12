@@ -1,8 +1,46 @@
 import React, { useState } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { useDoneTasks } from '../data/FetchData';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '& > *': {
+        margin: 'auto',
+        width: '60%',
+      }},
+    alertInfo: {
+      color: '#0c5460',
+      backgroundColor: '#d1ecf1',
+      borderColor: '#bee5eb',
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
+    formControl: {
+      display: 'block',
+      width: '100%',
+      height: 'calc(2.25rem + 2px)',
+      padding: '.375rem .75rem',
+      fontSize: '1rem',
+      lineHeight: 1.5,
+      color: '#495057',
+      backgroundColor: '#fff',
+      backgroundClip: 'padding-box',
+      border: '1px solid #ced4da',
+      borderRadius: '.25rem',
+    },
+    btnSubmit: {
+      marginTop: 10,
+      marginBottom: 10,
+      color: 'white',
+    }
+  }),
+);
     
 function Create(): JSX.Element {
+  const classes = useStyles();
   let history = useHistory();
   const doneTasks: any = useDoneTasks();
     
@@ -83,58 +121,56 @@ function Create(): JSX.Element {
     })
   }
   return (
-    <div>
-    <div className={"col-md-12 form-wrapper"}>
+    <div className={classes.root}>
       <h2> Create Task </h2>
       {!submitSuccess && (
-        <div className="alert alert-info" role="alert">
+        <div className={classes.alertInfo} role="alert">
           Fill the form below to create a new task.
-                </div>
+        </div>
       )}
       {submitSuccess && (
-        <div className="alert alert-info" role="alert">
+        <div className={classes.alertInfo} role="alert">
           The form was successfully submitted!
-                        </div>
+        </div>
       )}
       <form id={"create-todo-form"} onSubmit={handleFormSubmission} noValidate={true}>
-        <div className="form-group col-md-12">
+        <div>
           <label htmlFor="title"> Title </label>
-          <input type="text" id="title" onChange={(e) => handleInputChanges(e)} name="title" className="form-control" placeholder="Enter title" />
+          <input type="text" id="title" onChange={(e) => handleInputChanges(e)} name="title" className={classes.formControl} placeholder="Enter title" />
         </div>
-        <div className="form-group col-md-12">
+        <div>
           <label htmlFor="description"> Description </label>
-          <input type="text" id="description" onChange={(e) => handleInputChanges(e)} name="description" className="form-control" placeholder="Enter Description" />
+          <input type="text" id="description" onChange={(e) => handleInputChanges(e)} name="description" className={classes.formControl} placeholder="Enter Description" />
         </div>
-        <div className="form-group col-md-12">
+        <div>
           <label htmlFor="isDone"> Is done? </label>
           <input type="checkbox" id="isDone"
           onChange={(e) => handleCheckboxChanges(e)} 
           checked={checkboxValue}
-          name="isDone" className="form-control" />
+          name="isDone" className={classes.formControl} />
         </div>
-        <div className="form-group col-md-12">
+        <div>
           <label htmlFor="priority"> Priority </label>
-          <input type="text" id="priority" onChange={(e) => handleInputChanges(e)} name="priority" className="form-control" placeholder="Enter priority" />
+          <input type="text" id="priority" onChange={(e) => handleInputChanges(e)} name="priority" className={classes.formControl} placeholder="Enter priority" />
         </div>
-        <div className="form-group col-md-12">
+        <div>
           <label htmlFor="startDate"> Start date </label>
-          <input type="text" id="startDate" onChange={(e) => handleInputChanges(e)} name="startDate" className="form-control" placeholder="Enter Start Date" />
+          <input type="text" id="startDate" onChange={(e) => handleInputChanges(e)} name="startDate" className={classes.formControl} placeholder="Enter Start Date" />
         </div>
-        <div className="form-group col-md-12">
+        <div>
           <label htmlFor="endDate"> End date </label>
-          <input type="text" id="endDate" onChange={(e) => handleInputChanges(e)} name="endDate" className="form-control" placeholder="Enter End Date" />
+          <input type="text" id="endDate" onChange={(e) => handleInputChanges(e)} name="endDate" className={classes.formControl} placeholder="Enter End Date" />
         </div>
-        <div className="form-group col-md-4 pull-right">
-          <button className="btn btn-success" type="submit">
+        <div className={classes.btnSubmit}>
+          <Button variant="contained" color="primary" type="submit">
             Create Task
-          </button>
+          </Button>
           {loading &&
             <span className="fa fa-circle-o-notch fa-spin" />
           }
         </div>
       </form>
     </div>
-  </div>
   );
 }
 export default withRouter(Create)

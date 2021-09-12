@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '& > *': {
+        margin: 'auto',
+        width: '60%',
+      }},
+    margins: {
+      marginTop: 30,
+      marginBottom: 20,
+    },
+  }),
+);
     
 function Task() {
+  const classes = useStyles();
   let { taskId } = useParams<{ taskId: any }>();
   const [task, setTask] = useState<any>({});
     
@@ -15,41 +31,32 @@ function Task() {
   }, [taskId]);
     
     return (
-        <section className="post-area">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-1 col-md-0" />
-            <div className="col-lg-10 col-md-12">
+        <section className={classes.root}>
               {task && 
-                <div className="main-post">
-                  <div className="post-top-area">
-                    <h5 className="pre-title">YOUR TASK</h5>
-                    <h3 className="title">
+                  <div className={classes.margins}>
+                    <h2>YOUR TASK</h2>
+                    <h3>
                       <span>
                         <b>{task.title}</b>
                       </span>
                     </h3>
-                    <p className="para">
+                    <p className={classes.margins}>
                       {task.isDone ? "Yes" : "No"}
                     </p>
-                    <p className="para">
+                    <p className={classes.margins}>
                       {task.priority}
                     </p>
-                    <p className="para">
+                    <p className={classes.margins}>
                       {task.description}
                     </p>
-                    <p className="para">
+                    <p className={classes.margins}>
                       {task.startDate}
                     </p>
-                    <p className="para">
+                    <p className={classes.margins}>
                       {task.endDate}
                     </p>
-                  </div>
-                </div>              
+                  </div>        
               }
-            </div>
-          </div>
-        </div>
       </section>
     );
 }
